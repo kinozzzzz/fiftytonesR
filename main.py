@@ -2,7 +2,6 @@ from rich import print as rprint
 from numpy.random import choice,uniform
 import numpy as np
 import os
-from pynput.keyboard import Key,Listener
 
 tone_list = [
     'あ','い','う','え','お',
@@ -14,8 +13,21 @@ tone_list = [
     'ま','み','む','め','も',
     'や','ゆ','よ',
     'ら','り','る','れ','ろ',
-    'わ','を'
+    'わ','を',
+    'ん',
+    'ア','イ','ウ','エ','オ',
+    'カ','キ','ク','ケ','コ',
+    'サ','シ','ス','セ','ソ',
+    'タ','チ','ツ','テ','ト',
+    'ナ','ニ','ヌ','ネ','ノ',
+    'ハ','ヒ','フ','ヘ','ホ',
+    'マ','ミ','ム','メ','モ',
+    'ヤ','ユ','ヨ',
+    'ラ','リ','ル','レ','ロ',
+    'ワ','ヲ',
+    'ン'
 ]
+
 pron_list = [
     'a','i','u','e','o',
     'ka','ki','ku','ke','ko',
@@ -26,32 +38,40 @@ pron_list = [
     'ma','mi','mu','me','mo',
     'ya','yu','yo',
     'ra','ri','ru','re','ro',
-    'wa','wo'
+    'wa','wo',
+    'n'
 ]
 
 
 if __name__ == '__main__':
     nums = len(tone_list)
     memory = np.load("memory.npy")
+
+    if os.name == "posix":
+        clear_cmd = "clear"
+    elif os.name == "nt":
+        clear_cmd = "cls"
     try:
         last_pos = -1
         pos = -1
         while True:
-            os.system("cls")
-
+            os.system(clear_cmd)
+            
             prob = np.exp(memory[:,1] / memory[:,0] / 1.45) / np.log(memory[:,1] + 1)
             prob = prob / np.sum(prob)
+            # print(nums,prob.shape)
             while pos == last_pos:
                 pos = choice(nums,size=1,replace=True,p=prob)[0]
             show = int(uniform(0,2))
             if show:
+                rprint(f"what is the tone of [yellow]{pron_list[pos]}[/yellow]?",end="")
+                input()
+                rprint(f"[green]{tone_list[pos % 46]}[/green] & [green]{tone_list[pos % 46 + 46]}[/green]")
+                
+            else:
                 rprint(f"what is the pronunciation of [yellow]{tone_list[pos]}[/yellow]?",end="")
                 input()
                 rprint(f"[green]{pron_list[pos]}[/green]")
-            else:
-                rprint(f"what is the tone of [yellow]{pron_list[pos]}[/yellow]?",end="")
-                input()
-                rprint(f"[green]{tone_list[pos]}[/green]")
             answer = input()
             if not answer:
                 memory[pos][0] += 1
@@ -60,4 +80,5 @@ if __name__ == '__main__':
 
             last_pos = pos
     except KeyboardInterrupt:
+        print("saving yout practice results")
         np.save("memory.npy",memory)
