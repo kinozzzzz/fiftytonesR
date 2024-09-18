@@ -64,14 +64,14 @@ if __name__ == '__main__':
                 pos = choice(nums,size=1,replace=True,p=prob)[0]
             show = int(uniform(0,2))
             if show:
-                rprint(f"what is the tone of [yellow]{pron_list[pos]}[/yellow]?",end="")
+                rprint(f"what is the tone of [yellow]{pron_list[pos % 46]}[/yellow]?",end="")
                 input()
                 rprint(f"[green]{tone_list[pos % 46]}[/green] & [green]{tone_list[pos % 46 + 46]}[/green]")
                 
             else:
                 rprint(f"what is the pronunciation of [yellow]{tone_list[pos]}[/yellow]?",end="")
                 input()
-                rprint(f"[green]{pron_list[pos]}[/green]")
+                rprint(f"[green]{pron_list[pos % 46]}[/green]")
             answer = input()
             if not answer:
                 memory[pos][0] += 1
