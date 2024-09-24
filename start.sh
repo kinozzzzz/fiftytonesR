@@ -1,0 +1,1 @@
+streamlit run gui_main.py --server.port 10001
